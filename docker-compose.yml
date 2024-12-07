@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: ag-sistemas-db
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ag-sistemas-db
+      PGDATA: /data/postgres
+    volumes:
+      - ./data/pg:/data/postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d ag-sistemas-db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ag-sistemas-server-app:
+    container_name: ag-sistemas-server-app
+    image: node:20-alpine
+    working_dir: /usr/src/app
+    command: ["sh", "-c", "npx prisma generate && npm run start:dev"]
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - 3335:3335
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@ag-sistemas-db:5432/ag-sistemas-db?schema=public
