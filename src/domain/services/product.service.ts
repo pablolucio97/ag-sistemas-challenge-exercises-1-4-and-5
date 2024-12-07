@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { Decimal } from '@prisma/client/runtime/library';
 import { PrismaService } from 'src/service/prisma';
 import {
   CreateProductDTO,
@@ -70,9 +71,14 @@ export class ProductsService implements ProductsRepository {
     return product;
   }
   //Exercicio 4
-  async validateProduct(data: Partial<CreateProductDTO>) {
+  async validateProduct(data: Partial<CreateProductDTO>): Promise<void> {
+    const price =
+      typeof data.preco === 'object' && 'toNumber' in data.preco
+        ? (data.preco as Decimal).toNumber()
+        : data.preco;
+
     const isProductNameValid = data.nome && data.nome.trim().length > 0;
-    const isProductPriceValid = data.preco && data.preco.toNumber() > 0;
+    const isProductPriceValid = price && price > 0;
     if (!isProductNameValid) {
       throw new BadRequestException('O nome do produto não pode estar vazio.');
     }

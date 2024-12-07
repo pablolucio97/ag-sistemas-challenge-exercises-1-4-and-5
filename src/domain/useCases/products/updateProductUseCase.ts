@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UpdateProductDTO } from '../../DTOs/productsDTO';
 import { ProductsService } from '../../services/product.service';
 
@@ -6,6 +10,12 @@ import { ProductsService } from '../../services/product.service';
 export class UpdateProductUseCase {
   constructor(private productsService: ProductsService) {}
   async execute(data: UpdateProductDTO) {
+    const product = await this.productsService.checkIfProductWasFound(data.id);
+
+    if (!product) {
+      throw new NotFoundException('Produto não encontrado.');
+    }
+
     await this.productsService.validateProduct(data);
 
     if (data.nome) {
