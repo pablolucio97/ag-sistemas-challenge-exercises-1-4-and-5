@@ -6,8 +6,6 @@ import { ProductsService } from '../../services/product.service';
 export class CreateProductUseCase {
   constructor(private productsService: ProductsService) {}
   async execute(data: CreateProductDTO) {
-    await this.productsService.validateProduct(data);
-
     const productAlreadyExists =
       await this.productsService.checkIfProductAlreadyExists(data.nome);
     if (productAlreadyExists) {

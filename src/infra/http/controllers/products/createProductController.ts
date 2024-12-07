@@ -50,6 +50,12 @@ export class CreateProductController {
           message: error.message,
           error: error.detail,
         });
+      } else if (error.status && error.status === HttpStatus.BAD_REQUEST) {
+        throw new BadRequestException({
+          statusCode: HttpStatus.BAD_REQUEST,
+          message: error.message,
+          error: error.detail,
+        });
       } else {
         throw new InternalServerErrorException({
           statusCode: HttpStatus.INTERNAL_SERVER_ERROR,

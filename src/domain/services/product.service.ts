@@ -12,6 +12,8 @@ import { ProductsRepository } from '../repositories/interfaces/productsRepositor
 export class ProductsService implements ProductsRepository {
   constructor(private prismaService: PrismaService) {}
   async createProduct(data: CreateProductDTO): Promise<ProductDTO | null> {
+    await this.validateProduct(data);
+
     const productAlreadyExists = await this.checkIfProductAlreadyExists(
       data.nome,
     );
