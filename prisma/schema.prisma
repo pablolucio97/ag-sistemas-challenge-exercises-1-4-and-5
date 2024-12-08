@@ -15,7 +15,13 @@ datasource db {
 
 model Produto {
   id        Int     @id @default(autoincrement())
-  nome      String
+  nome      String  @unique()
   preco     Decimal @db.Decimal(10, 2)
   descricao String
+}
+
+model User {
+  id    Int    @id @default(autoincrement())
+  email String @unique()
+  senha String
 }
