@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { hash } from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
+import { compare, hash } from 'bcryptjs';
 import { PrismaService } from 'src/service/prisma';
-import { CreateUserDTO, UserDTO } from '../DTOs/usersDTO';
+import { AuthenticateUserDTO, CreateUserDTO, UserDTO } from '../DTOs/usersDTO';
 import { UsersRepository } from '../repositories/interfaces/usersRepository';
 
 @Injectable()
 export class UsersService implements UsersRepository {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private jwt: JwtService,
+  ) {}
   async createUser(data: CreateUserDTO): Promise<UserDTO | null> {
     const userAlreadyExists = await this.checkIfUserAlreadyExists(data.email);
 
@@ -44,5 +48,30 @@ export class UsersService implements UsersRepository {
       return true;
     }
     return false;
+  }
+
+  async authenticateUser(data: AuthenticateUserDTO): Promise<string | null> {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        email: data.email,
+      },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    const isPasswordValid = await compare(data.senha, user.senha);
+
+    if (!isPasswordValid) {
+      null;
+    }
+
+    const token = this.jwt.sign(
+      { sub: user.email.toString() },
+      { expiresIn: '1d', algorithm: 'RS256' },
+    );
+
+    return token;
   }
 }

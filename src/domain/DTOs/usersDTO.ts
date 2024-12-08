@@ -8,3 +8,8 @@ export interface CreateUserDTO {
   email: string;
   senha: string;
 }
+
+export interface AuthenticateUserDTO {
+  email: string;
+  senha: string;
+}

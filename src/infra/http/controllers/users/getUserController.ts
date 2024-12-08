@@ -6,7 +6,9 @@ import {
   InternalServerErrorException,
   NotFoundException,
   Param,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { UserDTO } from 'src/domain/DTOs/usersDTO';
 import { GetUserUseCase } from 'src/domain/useCases/users/getUserUseCase';
 
@@ -16,6 +18,7 @@ interface ControllerResponse {
 }
 
 @Controller('/auth/profile')
+@UseGuards(AuthGuard('jwt-user'))
 export class GetUserController {
   constructor(private getUserUseCase: GetUserUseCase) {}
 
