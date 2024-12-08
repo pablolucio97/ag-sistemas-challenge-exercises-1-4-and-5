@@ -3,7 +3,7 @@ import { Decimal } from '@prisma/client/runtime/library';
 export interface ProductDTO {
   id: number;
   nome: string;
-  preco: Decimal;
+  preco: Decimal | number;
   descricao: string;
 }
 

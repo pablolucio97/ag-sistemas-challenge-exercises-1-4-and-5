@@ -26,16 +26,28 @@ export class ProductsService implements ProductsRepository {
     return newProduct;
   }
   async listProducts(): Promise<ProductDTO[]> {
-    const products = await this.prismaService.produto.findMany();
+    const rawProducts = await this.prismaService.produto.findMany();
+    const products = rawProducts.map((product) => ({
+      ...product,
+      preco: parseFloat(String(product.preco)),
+    }));
     return products;
   }
   async getProduct(productId: number): Promise<ProductDTO | null> {
-    const product = await this.prismaService.produto.findUnique({
+    const rawProduct = await this.prismaService.produto.findUnique({
       where: {
         id: productId,
       },
     });
 
+    if (!rawProduct) {
+      return null;
+    }
+
+    const product = {
+      ...rawProduct,
+      preco: parseFloat(String(rawProduct.preco)),
+    };
     return product;
   }
   async updateProduct(data: UpdateProductDTO): Promise<ProductDTO | null> {
