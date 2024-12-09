@@ -57,6 +57,14 @@ export class ProductsService implements ProductsRepository {
       return null;
     }
 
+    const productAlreadyExists = await this.checkIfProductAlreadyExists(
+      data.nome!,
+    );
+
+    if (productAlreadyExists) {
+      return null;
+    }
+
     const updatedProduct = await this.prismaService.produto.update({
       where: {
         id: data.id,

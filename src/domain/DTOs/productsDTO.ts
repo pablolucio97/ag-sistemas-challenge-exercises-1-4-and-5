@@ -16,6 +16,6 @@ export interface CreateProductDTO {
 export interface UpdateProductDTO {
   id: number;
   nome?: string;
-  preco?: Decimal;
+  preco?: Decimal | number;
   descricao?: string;
 }
