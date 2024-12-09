@@ -23,6 +23,9 @@
 5. Com a aplicação Docker executando, execute em uma nova janela do terminal o comando `npx prisma migrate dev --name initial-migration` para iniciar as migrations.
 6. Para testar as aplicações em um cliente Rest, utilize o arquivo `agsistemas.json` que foi disponibilizado na raíz do projeto.
 
+## Executando testes
+
+Foram providenciados testes unitários para validar a lógica de criação e atualização de produto. Execute o comando `npm run test` para executar os testes.
 
 ### Observações
 
