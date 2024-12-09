@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Decimal } from '@prisma/client/runtime/library';
-import { PrismaService } from 'src/service/prisma';
+import { PrismaService } from '../../service/prisma';
 import {
   CreateProductDTO,
   ProductDTO,
@@ -69,7 +69,7 @@ export class ProductsService implements ProductsRepository {
     await this.prismaService.produto.delete({ where: { id: productId } });
   }
   async checkIfProductAlreadyExists(productName: string) {
-    const productAlreadyExists = await this.prismaService.produto.findFirst({
+    const productAlreadyExists = await this.prismaService.produto.findUnique({
       where: {
         nome: productName,
       },

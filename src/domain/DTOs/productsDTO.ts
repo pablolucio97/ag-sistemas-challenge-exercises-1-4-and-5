@@ -9,7 +9,7 @@ export interface ProductDTO {
 
 export interface CreateProductDTO {
   nome: string;
-  preco: Decimal;
+  preco: Decimal | number;
   descricao: string;
 }
 
