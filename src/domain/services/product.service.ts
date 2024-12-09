@@ -23,7 +23,10 @@ export class ProductsService implements ProductsRepository {
     }
 
     const newProduct = await this.prismaService.produto.create({ data });
-    return newProduct;
+    return {
+      ...newProduct,
+      preco: parseFloat(String(newProduct.preco)),
+    };
   }
   async listProducts(): Promise<ProductDTO[]> {
     const rawProducts = await this.prismaService.produto.findMany();
@@ -71,7 +74,10 @@ export class ProductsService implements ProductsRepository {
       },
       data,
     });
-    return updatedProduct;
+    return {
+      ...updatedProduct,
+      preco: parseFloat(String(updatedProduct.preco)),
+    };
   }
   async deleteProduct(productId: number): Promise<void> {
     await this.prismaService.produto.delete({ where: { id: productId } });
